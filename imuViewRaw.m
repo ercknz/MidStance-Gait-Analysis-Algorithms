@@ -12,7 +12,7 @@ sensorLoc = {'leftAnkle','rightAnkle','waist'};
 session.freqC = 20; session.filtOrder = 2;
 
 %% Load Mat-file
-load(['subjectMatLabData/subject',num2str(subj.Num),'RawDataLogs.mat']);
+load(['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/subjectMatLabData/subject',num2str(subj.Num),'RawDataLogs.mat']);
 
 %% Session times
 for i=1:length(sensorLoc)

@@ -9,7 +9,7 @@ looking = true;
 sensorLoc = {'leftAnkle','leftWrist','rightAnkle','rightWrist','waist'};
 
 %% Load Mat-file
-load('Shimmer-Vicon Test/shimmerViconTestRawData.mat');
+load('../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/Shimmer-Vicon Test/shimmerViconTestRawData.mat');
 
 %% Test times, frequency and period
 raw.freqC = 20; raw.filtOrder = 2;

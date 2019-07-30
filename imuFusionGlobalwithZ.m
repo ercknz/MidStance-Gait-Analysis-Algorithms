@@ -16,7 +16,7 @@ session.freqC = 5; session.filtOrder = 2; gravity = 9.81;
 session.compHigh = 0.98; session.compLow = 1-session.compHigh;
 
 %% Load Mat-file
-load(['subjectMatLabData-Rot/subject',num2str(subj.Num),'RawDataLogs-Rot.mat']);
+load(['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/subjectMatLabData-Rot/subject',num2str(subj.Num),'RawDataLogs-Rot.mat']);
 
 %% Session times
 for i=1:length(sensorLoc)
@@ -272,7 +272,7 @@ for i = 1:length(sensorLoc)
     end
 end
 
-writematrix([subj.waist.avgVel, subj.leftAnkle.avgVel, subj.rightAnkle.avgVel],'avgVel.xlsx','Range',['K',num2str(subj.Num+2)])
+writematrix([subj.waist.avgVel, subj.leftAnkle.avgVel, subj.rightAnkle.avgVel],'../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/avgVel.xlsx','Range',['K',num2str(subj.Num+2)])
 
 %% Plotting of Velocities and Accelerations
 for i = 1:length(sensorLoc)

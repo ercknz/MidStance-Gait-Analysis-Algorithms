@@ -14,8 +14,8 @@ clear; clc; close all;
 %% Setting up varibles to iterate over.
 % subjects 1, 2, 4, 5, 6, 7, 12, 13 have good gait data.
 goodSubj = [1, 2, 4, 5];
-timesSigma = [2.5];
-yAxis = [true];
+timesSigma = [2.5, 3];
+yAxis = [true, false];
 
 %% Run Main functions
 for i = goodSubj

@@ -373,12 +373,12 @@ else
     end
 end
 % saves data and pictures in folder/worksheet
-writematrix([subj.Num, mean(subj.waist.avgCycleAccX) mean(subj.waist.avgCycleAccY) subj.waist.cycleAvgVel, subj.right.avgVel, subj.right.avgStepTime, subj.right.stdStepTime, length(subj.right.steps), length(subj.right.RSsteps),subj.left.avgVel, subj.left.avgStepTime, subj.left.stdStepTime, length(subj.left.steps), length(subj.left.RSsteps)],'cycleSeparationData.xlsx','Sheet',section,'Range',['A',num2str(subj.Num+2)])
+writematrix([subj.Num, mean(subj.waist.avgCycleAccX) mean(subj.waist.avgCycleAccY) subj.waist.cycleAvgVel, subj.right.avgVel, subj.right.avgStepTime, subj.right.stdStepTime, length(subj.right.steps), length(subj.right.RSsteps),subj.left.avgVel, subj.left.avgStepTime, subj.left.stdStepTime, length(subj.left.steps), length(subj.left.RSsteps)],'../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/cycleSeparationData.xlsx','Sheet',section,'Range',['A',num2str(subj.Num+2)])
 set(fig1, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
-saveas(fig1, ['IMU Data Images/',section,'/subj',num2str(subj.Num),'LeadingAngVel',section,'.pdf']);
+saveas(fig1, ['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/IMU Data Images/',section,'/subj',num2str(subj.Num),'LeadingAngVel',section,'.pdf']);
 set(fig2, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
-saveas(fig2, ['IMU Data Images/',section,'/subj',num2str(subj.Num),'AnkleAccels',section,'.pdf']);
+saveas(fig2, ['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/IMU Data Images/',section,'/subj',num2str(subj.Num),'AnkleAccels',section,'.pdf']);
 set(fig3, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
-saveas(fig3, ['IMU Data Images/',section,'/subj',num2str(subj.Num),'WaistAccels',section,'.pdf']);
+saveas(fig3, ['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/IMU Data Images/',section,'/subj',num2str(subj.Num),'WaistAccels',section,'.pdf']);
 
 end

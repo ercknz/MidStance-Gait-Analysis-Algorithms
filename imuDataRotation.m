@@ -9,7 +9,7 @@ sensorLoc = {'leftAnkle','leftWrist','waist'};
 dataIndex = [2,4,6,8,9,11]';
 
 %% Load Mat-file
-load(['subjectMatLabData/subject',num2str(subj.Num),'RawDataLogs.mat']);
+load(['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/subjectMatLabData/subject',num2str(subj.Num),'RawDataLogs.mat']);
 
 %% rotate data
 for i = 1:length(sensorLoc)
@@ -20,4 +20,4 @@ for i = 1:length(sensorLoc)
 end
 
 %% Save modifed mat-file
-save(['subjectMatLabData-Rot/subject',num2str(subj.Num),'RawDataLogs-Rot.mat'],'raw','logFile','subj');
+save(['../../../Google Drive/School/PhD - Biomedical/Rutgers - Rotation/Gait Data/subjectMatLabData-Rot/subject',num2str(subj.Num),'RawDataLogs-Rot.mat'],'raw','logFile','subj');
