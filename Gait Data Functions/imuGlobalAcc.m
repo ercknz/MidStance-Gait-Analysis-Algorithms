@@ -5,11 +5,11 @@ function globalAccXYZ = imuGlobalAcc(anglesXYZ, accXYZ)
 % +x: direction of walking
 % +y: medial-to-lateral
 % +z: lower-to-upper body
-% 
+%
 % Global Accelerations are founds as such:
-% Ax = axCos(theta)-aySin(theta) -> direction of walking.
+% Ax = axCos(theta)-azSin(theta) -> direction of walking.
 % Ay is ignored at the moment
-% Az = axSin(theta)+ayCos(theta)-gravity -> Vertical direction.
+% Az = axSin(theta)+azCos(theta)-gravity -> Vertical direction.
 %
 % function by erick nunez
 
