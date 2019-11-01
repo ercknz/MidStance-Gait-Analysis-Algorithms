@@ -177,17 +177,16 @@ end
 % -------------------------------------------------------------------------
 % Functions
 % -------------------------------------------------------------------------
-function xyzOUT = rotate(xyzIN, axis, degrees)
+function xyzOUT = rotate(xyzIN, axis, theta)
 [length, ~] = size(xyzIN);
 xyzOUT = nan(length,3);
-theta = degrees * pi / 180;
 switch axis
     case 'x'
-        rotMat = [1 0 0; 0 cos(theta) sin(theta); 0 -sin(theta) cos(theta)];
+        rotMat = [1 0 0; 0 cosd(theta) sind(theta); 0 -sind(theta) cosd(theta)];
     case 'y'
-        rotMat = [cos(theta) 0 -sin(theta); 0 1 0; sin(theta) 0 cos(theta)];
+        rotMat = [cosd(theta) 0 -sind(theta); 0 1 0; sind(theta) 0 cosd(theta)];
     case 'z'
-        rotMat = [cos(theta) sin(theta) 0; -sin(theta) cos(theta) 0; 0 0 1];
+        rotMat = [cosd(theta) sind(theta) 0; -sind(theta) cosd(theta) 0; 0 0 1];
     otherwise
         error('invalid axis, use "x", "y", or "z"')
 end
