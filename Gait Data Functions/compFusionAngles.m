@@ -7,17 +7,17 @@ function compAngles = compFusionAngles(highPass, accXYZ, gyroXYZ, magXYZ, sample
 % +x: direction of walking
 % +y: medial-to-lateral
 % +z: lower-to-upper body
-%
+% 
 % roll = atan(acc(y)/acc(z))
 % pitch = atan(-acc(x)/sqrt(acc(y)^2+acc(z)^2))
-%
+% 
 % magAng(x) = mag(x)*cos(pitch) + mag(z)*sin(pitch)
 % magAng(y) = mag(x)*sin(roll)*sin(pitch) + mag(y)*cos(roll) - mag(z)*sin(roll)*cos(pitch)
-% yaw = atan(magAng(y)/magAng(x))
+% yaw = atan(magAng(y)/magAng(x)) 
 % accAng = [roll, pitch, yaw]
-%
+% 
 % compAng(i) = highPass*(compAng(i-1)+gyro*dt)+lowPass*accAng
-%
+% 
 % Function by erick nunez
 
 %% Sets up variables and checks them

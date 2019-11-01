@@ -1,9 +1,8 @@
 function steps = cycleIMUdata(steps, accXYZ, times)
-%% IMU Data Resampling
-% This function takes in IMU data and calculated angles. Then using the
-% steps indexes to resample the data. This is used to normalized the data
-% based on heel strike to heel strike. StepsCell should contain the step
-% indexes.  Gyro data and angles are optional arguments.
+%% cycleIMUdata
+% This function takes in IMU data and the seperated steps, either HS to HS
+% or MS to MS, and find the velocity, distance, displacement, and speed per
+% step. 
 %
 % The function assumes the following orientation of the data:
 % +x: direction of walking
@@ -16,7 +15,7 @@ function steps = cycleIMUdata(steps, accXYZ, times)
 indexes = steps.indexes;
 steps.Acc = cell(size(indexes));        steps.Times = {cell(size(indexes))};
 steps.Vel = cell(size(indexes));        steps.Displace = cell(size(indexes));
-steps.Distance = nan(size(indexes));   steps.Speed = nan(size(indexes));
+steps.Distance = nan(size(indexes));    steps.Speed = nan(size(indexes));
 
 %% Pull Accelerations
 for i = 1:length(indexes)
@@ -43,7 +42,7 @@ end
 
 end
 
-%% Functions
+%% Additional Functions
 function dataOut = calculateInt(rate, dt)
 dataOut = zeros(size(rate));
 for i = 2:length(dataOut)

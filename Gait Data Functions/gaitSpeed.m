@@ -1,4 +1,4 @@
-function [waist, rightAnkle, leftAnkle] = gaitSpeed(subjNum, measuredWaist, waist, rightAnkle, leftAnkle)
+function [waist, rightAnkle, leftAnkle] = gaitSpeed(measuredWaist, waist, rightAnkle, leftAnkle)
 %% GaitVelocity
 % This functions takes in the measured waist data, the separated right
 % steps, and the separated  left steps. Then, based on the leading foot, it
@@ -10,8 +10,6 @@ function [waist, rightAnkle, leftAnkle] = gaitSpeed(subjNum, measuredWaist, wais
 % +z: lower-to-upper body
 %
 % Function by erick nunez
-
-%% Variables 
 
 %% Uses leading Foot to find waist data.
 if rightAnkle.steps.indexes{1}(1) < leftAnkle.steps.indexes{1}(1)
@@ -47,11 +45,9 @@ waist.avgSpeed = waist.Step.distance/ waist.Step.avgTimes(end);
 rightAnkle.avgSpeed = rightAnkle.Step.distance/ rightAnkle.Step.avgTimes(end);
 leftAnkle.avgSpeed = leftAnkle.Step.distance/ leftAnkle.Step.avgTimes(end);
 
-%% Saves data
-writematrix([waist.avgSpeed, rightAnkle.avgSpeed, leftAnkle.avgSpeed], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['H',num2str(subjNum+2)])
-
 end
 
+%% Additional Functions
 function dataOut = calculateInt(rate, dt)
 dataOut = zeros(size(rate));
 for i = 2:length(dataOut)
