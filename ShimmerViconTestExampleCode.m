@@ -1,12 +1,13 @@
+function ShimmerViconTestExampleCode(subjNum, method)
 %% Shimmer Vicon test data import using classes
 % This script use the classes used to organize the data collected from the
 % shimmer-vicon test. This script is used to test the data stored in the
-% classes and plot them.
+% classes and plot them. 
 %
 % script by erick nunez
 
-%% clean up
-clear; clc; close all;
+% %% clean up
+% clear; clc; close all;
 
 %% File Paths
 addpath('Gait Data Classes');
@@ -19,8 +20,7 @@ path.Waist = 'Shimmer IMU Files/2019-07-31_08.38.51_default_exp_SD_Session1/defa
 logFileName = 'shimmerViconTest2Times.xlsx';
 
 %% Variables
-% 5 shimmer-vicon tests performed.
-subjNum = 1;    method = 2;
+% 5 shimmer-vicon tests performed. 
 compHighPass = 0.98;
 accRange = 2:4;         gyroRange = 9:11;       magRange = 12:14;
 cutOffFreq = 15;        filterOrder = 4;
@@ -35,7 +35,7 @@ mData.getAcc(accRange);
 mData.getGyro(gyroRange);
 mData.getMag(magRange);
 
-%% Filter data
+%% Filter data 
 mData.getSamplingFreq();
 mData.createFilter(cutOffFreq, filterOrder);
 mData.filterData();
@@ -51,7 +51,7 @@ mData.rightAnkle.rotateIMU('x',-90);
 mData.leftAnkle.rotateIMU('y', 180);
 mData.leftAnkle.rotateIMU('x',-90);
 
-%% Finds Angles using complimentary filter
+%% Finds Angles using complimentary filter 
 waist.preAngles = compFusionAngles(compHighPass, mData.waist.fPreAcc, mData.waist.fPreGyro, mData.waist.fPreMag, mData.waist.sampleFreq);
 waist.angles = compFusionAngles(compHighPass, mData.waist.fAcc, mData.waist.fGyro, mData.waist.fMag, mData.waist.sampleFreq);
 
@@ -77,35 +77,39 @@ lAnkle.preGlobalAcc = imuGlobalAcc(lAnkle.preAngles, mData.leftAnkle.fPreAcc);
 lAnkle.globalAcc = imuGlobalAcc(lAnkle.angles, mData.leftAnkle.fAcc);
 lAnkle.globalAcc = lAnkle.globalAcc - mean(lAnkle.preGlobalAcc);
 
-%% Segmentation of Data
-rAnkle.steps = findStepIndexes(mData.rightAnkle.fGyro, mData.rightAnkle.times, sigma);
-lAnkle.steps = findStepIndexes(mData.leftAnkle.fGyro, mData.leftAnkle.times, sigma);
-
 %% Method #1
 if method == 1
+    % Segmentation of Data
+    rAnkle.steps = findHSIndexes(mData.rightAnkle.fGyro, mData.rightAnkle.times, sigma);
+    lAnkle.steps = findHSIndexes(mData.leftAnkle.fGyro, mData.leftAnkle.times, sigma);
+    
     % Data Resampling
     rAnkle.Step = imuDataResampling(rAnkle.steps.indexes, mData.rightAnkle.times, rAnkle.globalAcc, mData.rightAnkle.fGyro, rAnkle.angles);
     lAnkle.Step = imuDataResampling(lAnkle.steps.indexes, mData.leftAnkle.times, lAnkle.globalAcc, mData.leftAnkle.fGyro, lAnkle.angles);
-
+    
     % Walking Speed
-    [waist, rAnkle, lAnkle] = gaitSpeed(subjNum, mData.waist, waist, rAnkle, lAnkle);
-
-    % Saves the workspace
-    % save(['Shimmer Workspaces/shimmerViconIMU',num2str(subjNum),'.mat'])
-
+    [waist, rAnkle, lAnkle] = gaitSpeed(mData.waist, waist, rAnkle, lAnkle);
+    
+    % Saves data
+    writematrix([waist.avgSpeed, rAnkle.avgSpeed, lAnkle.avgSpeed], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['H',num2str(subjNum+2)])
+    
     % Plot the calculated data
-    plotStepIMUdata(subjNum, 'RightAnkle', rAnkle.steps.HSindexes, ...
+    plotStepIMUdata(subjNum, 'RightAnkle', rAnkle.steps, 'HS', ...
         rAnkle.globalAcc, mData.rightAnkle.fGyro, rAnkle.angles, mData.rightAnkle.times, ...
-        rAnkle.steps.indexes, rAnkle.Step.meanAcc, rAnkle.Step.meanGyro, rAnkle.Step.meanAngle, ...
+        rAnkle.Step.meanAcc, rAnkle.Step.meanGyro, rAnkle.Step.meanAngle, ...
         rAnkle.Step.stdAcc, rAnkle.Step.stdGyro, rAnkle.Step.stdAngle, rAnkle.Step.avgTimes)
-    plotStepIMUdata(subjNum, 'LeftAnkle', lAnkle.steps.HSindexes, ...
+    plotStepIMUdata(subjNum, 'LeftAnkle', lAnkle.steps, 'HS', ...
         lAnkle.globalAcc, mData.leftAnkle.fGyro, lAnkle.angles, mData.leftAnkle.times, ...
-        lAnkle.steps.indexes, lAnkle.Step.meanAcc, lAnkle.Step.meanGyro, lAnkle.Step.meanAngle, ...
+        lAnkle.Step.meanAcc, lAnkle.Step.meanGyro, lAnkle.Step.meanAngle, ...
         lAnkle.Step.stdAcc, lAnkle.Step.stdGyro, lAnkle.Step.stdAngle, lAnkle.Step.avgTimes)
 end
 
 %% Method #2
 if method == 2
+    % Segmentation of Data
+    rAnkle.steps = findHSIndexes(mData.rightAnkle.fGyro, mData.rightAnkle.times, sigma);
+    lAnkle.steps = findHSIndexes(mData.leftAnkle.fGyro, mData.leftAnkle.times, sigma);
+    
     % Speeds per step
     rAnkle.steps = cycleIMUdata(rAnkle.steps, rAnkle.globalAcc, mData.rightAnkle.times);
     lAnkle.steps = cycleIMUdata(lAnkle.steps,lAnkle.globalAcc, mData.leftAnkle.times);
@@ -114,8 +118,55 @@ if method == 2
     else
         waist.steps = cycleIMUdata(lAnkle.steps, waist.globalAcc, mData.waist.times);
     end
-
+    
     % Saves data
     writematrix([mean(waist.steps.Speed), mean(rAnkle.steps.Speed), mean(lAnkle.steps.Speed)], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['K',num2str(subjNum+2)])
 end
 
+%% Method #3
+if method == 3
+    % Segmentation of Data
+    rAnkle.steps = findMSIndexes(rAnkle.angles, mData.rightAnkle.times, sigma);
+    lAnkle.steps = findMSIndexes(lAnkle.angles, mData.leftAnkle.times, sigma);
+    
+    % Data Resampling
+    rAnkle.Step = imuDataResampling(rAnkle.steps.indexes, mData.rightAnkle.times, rAnkle.globalAcc, mData.rightAnkle.fGyro, rAnkle.angles);
+    lAnkle.Step = imuDataResampling(lAnkle.steps.indexes, mData.leftAnkle.times, lAnkle.globalAcc, mData.leftAnkle.fGyro, lAnkle.angles);
+    
+    % Walking Speed
+    [waist, rAnkle, lAnkle] = gaitSpeed(mData.waist, waist, rAnkle, lAnkle);
+    
+    % Saves data
+    writematrix([waist.avgSpeed, rAnkle.avgSpeed, lAnkle.avgSpeed], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['N',num2str(subjNum+2)])
+    
+    % Plot the calculated data
+    plotStepIMUdata(subjNum, 'RightAnkle', rAnkle.steps, 'MS', ...
+        rAnkle.globalAcc, mData.rightAnkle.fGyro, rAnkle.angles, mData.rightAnkle.times, ...
+        rAnkle.Step.meanAcc, rAnkle.Step.meanGyro, rAnkle.Step.meanAngle, ...
+        rAnkle.Step.stdAcc, rAnkle.Step.stdGyro, rAnkle.Step.stdAngle, rAnkle.Step.avgTimes)
+    plotStepIMUdata(subjNum, 'LeftAnkle', lAnkle.steps, 'MS', ...
+        lAnkle.globalAcc, mData.leftAnkle.fGyro, lAnkle.angles, mData.leftAnkle.times, ...
+        lAnkle.Step.meanAcc, lAnkle.Step.meanGyro, lAnkle.Step.meanAngle, ...
+        lAnkle.Step.stdAcc, lAnkle.Step.stdGyro, lAnkle.Step.stdAngle, lAnkle.Step.avgTimes)
+end
+
+%% Method #4
+if method == 4
+    % Segmentation of Data
+    rAnkle.steps = findMSIndexes(rAnkle.angles, mData.rightAnkle.times, sigma);
+    lAnkle.steps = findMSIndexes(lAnkle.angles, mData.leftAnkle.times, sigma);
+    
+    % Speeds per step
+    rAnkle.steps = cycleIMUdata(rAnkle.steps, rAnkle.globalAcc, mData.rightAnkle.times);
+    lAnkle.steps = cycleIMUdata(lAnkle.steps,lAnkle.globalAcc, mData.leftAnkle.times);
+    if rAnkle.steps.indexes{1}(1) < lAnkle.steps.indexes{1}(1)
+        waist.steps = cycleIMUdata(rAnkle.steps, waist.globalAcc, mData.waist.times);
+    else
+        waist.steps = cycleIMUdata(lAnkle.steps, waist.globalAcc, mData.waist.times);
+    end
+    
+    % Saves data
+    writematrix([mean(waist.steps.Speed), mean(rAnkle.steps.Speed), mean(lAnkle.steps.Speed)], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['Q',num2str(subjNum+2)])
+end
+
+end
