@@ -5,16 +5,17 @@ function compAngles = compFusionAngles(highPass, accXYZ, gyroXYZ, magXYZ, sample
 % the below formulas. highPass is the weight for the complimentary
 % filter. This assumes the following orientation:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 % 
 % roll = atan(acc(y)/acc(z))
 % pitch = atan(-acc(x)/sqrt(acc(y)^2+acc(z)^2))
 % 
-% magAng(x) = mag(x)*cos(pitch) + mag(z)*sin(pitch)
-% magAng(y) = mag(x)*sin(roll)*sin(pitch) + mag(y)*cos(roll) - mag(z)*sin(roll)*cos(pitch)
-% yaw = atan(magAng(y)/magAng(x)) 
+% M(x) = mag(x)*cos(pitch) + mag(z)*sin(pitch)
+% M(y) = mag(x)*sin(roll)*sin(pitch) + mag(y)*cos(roll) - mag(z)*sin(roll)*cos(pitch)
+% yaw = atan(M(y)/M(x)) 
 % accAng = [roll, pitch, yaw]
+%                              
 % 
 % compAng(i) = highPass*(compAng(i-1)+gyro*dt)+lowPass*accAng
 % 

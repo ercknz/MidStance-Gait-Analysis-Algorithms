@@ -6,8 +6,8 @@ function steps = cycleIMUdata(steps, accXYZ, times)
 %
 % The function assumes the following orientation of the data:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 %
 % Function by Erick Nunez
 
@@ -29,7 +29,7 @@ for i = 1:length(indexes)
     steps.Displace{i} =  calculateInt(steps.Vel{i}, mean(diff(steps.Times{i})));
 end
 
-%% Finds HS to HS length
+%% Finds segment length
 for i = 1:length(indexes)
     steps.Distance(i) = sqrt(steps.Displace{i}(end,1)^2 + steps.Displace{i}(end,3)^2);
 end

@@ -6,8 +6,8 @@ function plotStepIMUdata(subjNum, location, steps, HSorMS, accXYZ, gyroXYZ, angl
 % 
 % The function assumes the following orientation of the data:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 % 
 % Function by Erick Nunez
 
@@ -29,19 +29,19 @@ offset = randi(1000);
 fig1 = figure(20 + subjNum + offset);
 set(fig1, 'Units', 'Normalized', 'OuterPosition', [0,0, 1, 1]);
 subplot(3,1,1)
-plot(times, gyroXYZ(:,2),'-b'); grid on; hold on;
+plot(times, gyroXYZ(:,2)); grid on; hold on;
 plot(times(stancePts), gyroXYZ(stancePts,2), 'rs') 
 xlabel('seconds'); ylabel('deg/sec');
 title([location,' Gyro w/ ', stance,' for Subject ',num2str(subjNum)])
 
 subplot(3,1,2)
-plot(times, accXYZ(:,3),'-b'); grid on; hold on;
+plot(times, accXYZ(:,3)); grid on; hold on;
 plot(times(stancePts), accXYZ(stancePts,3), 'rs') 
 xlabel('seconds'); ylabel('m/s^2');
 title([location,' Global Vertical Acceleration w/ ', stance,' for Subject ',num2str(subjNum)])
 
 subplot(3,1,3)
-plot(times, anglesXYZ(:,2),'-b'); grid on; hold on;
+plot(times, anglesXYZ(:,2)); grid on; hold on;
 plot(times(stancePts), anglesXYZ(stancePts,2), 'rs') 
 xlabel('seconds'); ylabel('degrees');
 title([location,' IMU Angle w/ ', stance,' for Subject ',num2str(subjNum)])
@@ -80,7 +80,7 @@ xlabel('Sec'); ylabel('deg/sec');
 title([location,' Mean Gyroscope Step Profile for Subject ',num2str(subjNum)])
 
 subplot(3,2,4)
-errorbar(meanDur, meanAccXYZ(:,3), stdAccXYZ(:,1))
+errorbar(meanDur, meanAccXYZ(:,3), stdAccXYZ(:,3))
 grid on;
 xlabel('Sec'); ylabel('m/s^2');
 title([location,' Mean Global Vertical Accelerometer Step Profile for Subject ',num2str(subjNum)])

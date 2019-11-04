@@ -7,8 +7,8 @@ function avgStep = imuDataResampling(indexes, times, accXYZ, gyroXYZ, anglesXYZ)
 %
 % The function assumes the following orientation of the data:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 %
 % Function by Erick Nunez
 

@@ -5,8 +5,8 @@ function steps = findHSIndexes(gyroXYZ, times, sigma)
 % - Heel Strike segments. The function assumes the following orientation of
 % the data:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 % 
 % Function by Erick Nunez
 
@@ -19,7 +19,7 @@ maxValues = gyroXYZ(maxIndex,2);
 
 %% Finds Heel Strikes
 for i = 2:length(maxIndex)-1
-   if maxValues(i) > maxValues(i-1) && maxValues(i) > maxValues(i+1)
+   if maxValues(i) < maxValues(i-1) && maxValues(i) < maxValues(i+1)
       HSindex(end+1) = maxIndex(i); 
    end
 end

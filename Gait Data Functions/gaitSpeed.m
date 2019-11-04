@@ -6,8 +6,8 @@ function [waist, rightAnkle, leftAnkle] = gaitSpeed(measuredWaist, waist, rightA
 % velocities for the waist and ankles. Data is plotted and saved locally.
 % Function assumed the following orientation of the data:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 %
 % Function by erick nunez
 

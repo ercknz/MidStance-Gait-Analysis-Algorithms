@@ -1,11 +1,11 @@
 function steps = findMSIndexes(anglesXYZ, times, sigma)
 %% Finds MS Indexes
 % This function is used to find the Mid Stance point for each step based on 
-% the accelerations. The function assumes the following orientation of
+% the angles. The function assumes the following orientation of
 % the data:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 % 
 % Function by Erick Nunez
 
@@ -18,7 +18,7 @@ MSindex = find(islocalmin(abs(anglesXYZ(:,2)), 'MinSeparation', 0.2, 'SamplePoin
 %% Find rate of change of angles to find slope
 angRateY = gradient(anglesXYZ(:,2), mean(diff(times)));
 for i = 1:(length(MSindex) - removed)
-    if angRateY(MSindex(i - removed)) > 0
+    if angRateY(MSindex(i - removed)) < 0
        MSindex(i- removed) = [];
        removed = removed + 1;
     end
