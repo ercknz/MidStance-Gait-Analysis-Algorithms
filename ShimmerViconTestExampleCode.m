@@ -6,7 +6,7 @@ function ShimmerViconTestExampleCode(subjNum, method)
 %
 % script by erick nunez
 
-% %% clean up
+%% clean up
 % clear; clc; close all;
 
 %% File Paths
@@ -21,9 +21,10 @@ logFileName = 'shimmerViconTest2Times.xlsx';
 
 %% Variables
 % 5 shimmer-vicon tests performed. 
+% subjNum = 1;            method = 3;
 compHighPass = 0.98;
 accRange = 2:4;         gyroRange = 9:11;       magRange = 12:14;
-cutOffFreq = 15;        filterOrder = 4;
+cutOffFreq = 5;        filterOrder = 4;
 sigma = 3;
 
 %% Create measured data object and pull data
@@ -43,8 +44,8 @@ mData.filterData();
 %% Rotate sensors
 % Rotate sensors to match the following orientation:
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 mData.waist.rotateIMU('y', 90);
 mData.waist.rotateIMU('x',-90);
 mData.rightAnkle.rotateIMU('x',-90);
@@ -63,8 +64,8 @@ lAnkle.angles = compFusionAngles(compHighPass, mData.leftAnkle.fAcc, mData.leftA
 
 %% Calculate Global Accelerations and removes baseline
 % +x: direction of walking
-% +y: medial-to-lateral
-% +z: lower-to-upper body
+% +y: medial to Left Side
+% +z: normal to ground (vertical)
 waist.preGlobalAcc = imuGlobalAcc(waist.preAngles, mData.waist.fPreAcc);
 waist.globalAcc = imuGlobalAcc(waist.angles, mData.waist.fAcc);
 waist.globalAcc = waist.globalAcc - mean(waist.preGlobalAcc);
@@ -118,7 +119,7 @@ if method == 2
     else
         waist.steps = cycleIMUdata(lAnkle.steps, waist.globalAcc, mData.waist.times);
     end
-    
+   
     % Saves data
     writematrix([mean(waist.steps.Speed), mean(rAnkle.steps.Speed), mean(lAnkle.steps.Speed)], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['K',num2str(subjNum+2)])
 end
@@ -126,6 +127,8 @@ end
 %% Method #3
 if method == 3
     % Segmentation of Data
+%     rAnkle.steps = findMSIndexes(mData.rightAnkle.fGyro, mData.rightAnkle.times, sigma);
+%     lAnkle.steps = findMSIndexes(mData.leftAnkle.fGyro, mData.leftAnkle.times, sigma);
     rAnkle.steps = findMSIndexes(rAnkle.angles, mData.rightAnkle.times, sigma);
     lAnkle.steps = findMSIndexes(lAnkle.angles, mData.leftAnkle.times, sigma);
     
@@ -138,7 +141,7 @@ if method == 3
     
     % Saves data
     writematrix([waist.avgSpeed, rAnkle.avgSpeed, lAnkle.avgSpeed], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['N',num2str(subjNum+2)])
-    
+
     % Plot the calculated data
     plotStepIMUdata(subjNum, 'RightAnkle', rAnkle.steps, 'MS', ...
         rAnkle.globalAcc, mData.rightAnkle.fGyro, rAnkle.angles, mData.rightAnkle.times, ...

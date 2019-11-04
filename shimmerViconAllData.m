@@ -1,6 +1,9 @@
 %% Shimmer Vicon All Trials
 % Scripts and functions by erick nunez
 
+%% clean up
+clear; clc; close all;
+
 %% Variables
 trials = [1 2 3 4 5];
 methods = [1 2 3 4];
