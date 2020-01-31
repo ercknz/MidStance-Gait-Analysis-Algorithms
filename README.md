@@ -1,21 +1,22 @@
-# Rotation-gaitAnalysis
+## MidStance Gait Analysis Algorithms
 
+# Description
 This code takes in the data collected from subjects during medical evaluations. 
 Subjects wore IMU's on the waist, wrists and ankles.
 Subjects were asked to perfrom different motor taskes inclduing 2 min walking. 
 Subjects walked in open indoor enviroments. 
 The code pulls the gait data from a log file using unix timestamps. 
 Then it segments the data (heel-strike to heel-strike) or (Mid-stance to mid-stance).
-Based on averaged step acceleration profiles, we determine speeds. 
 
-Code was update into functions and classes for ease of use. 
-Refer to ShimmerViconTestExample to see how functions can be used. 
+Mutiple algorithms were assessed to determine effectiveness.
+
+Algorithms are split into different functions and classes for ease of use. 
+Refer to ShimmerViconTestExample.m to see how functions can be used. 
 Classes and functions were also added for processing vicon data within a C3D file.
 
 All code was tested in Matlab 2019a on Windows 7. 
 
-Code is a working progress. 
+No subject data or results were pushed to github. 
 
-No subject data or results is pushed to github and only remains locally. 
-
-Scripts and functions by erick nunez
+Scripts and functions by Erick Nunez.
+Supervised by Jean-francois Daneault, PhD
