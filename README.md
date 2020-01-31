@@ -18,5 +18,5 @@ All code was tested in Matlab 2019a on Windows 7.
 
 No subject data or results were pushed to github. 
 
-Scripts and functions by Erick Nunez.
+Scripts and functions by Erick Nunez.  
 Supervised by Jean-francois Daneault, PhD
