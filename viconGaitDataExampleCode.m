@@ -1,10 +1,15 @@
-%% Clean workspace
-clear; clc; close all;
+function viconGaitDataExampleCode(trialNumber)
+%% Vicon Gait Data import using classes
+%
+% script by erick nunez
 
 %% Creates c3dData object
-subjNumber = 1;
-fileName = ['C3D Files/Gait0',num2str(subjNumber),'.c3d'];
+% trialNumber = 101;
+subjNum = floor(trialNumber/100);
+testNum = trialNumber-subjNum*100;
+fileName = ['C3D Files/Gait',num2str(trialNumber),'.c3d'];
 addpath('Gait Data Classes');
+addpath('Gait Data Functions');
 gaitData = viconC3Ddata(fileName);
 
 %% Findings data points
@@ -22,7 +27,7 @@ leftAnkle = gaitData.data(:,:,8);
 %% plot data
 if ~gaitData.dataFound
     for i=1:gaitData.numberOfFrames
-        tic; cla;
+        tic; cla; 
         axis([-1,2,-3.5,3.5,0,2.4])
         xlabel('X'); ylabel('Y'); zlabel('Z');
         hold on; grid on;
@@ -37,16 +42,23 @@ if ~gaitData.dataFound
         drawnow
     end
 else
-    fig1 = figure(300+subjNumber);    
+    fig1 = figure(300+trialNumber);    
     set(fig1, 'Units', 'Normalized', 'OuterPosition', [0,0, 1, 1]);
-    plot(gaitData.times,waistSpeed)
-    grid on; legend('Waist')
-    title(['Speed of Points from Subject ',num2str(subjNumber)])
+    grid on; hold on;
+    plot(gaitData.times,waistSpeed,'Color','#77AC30');
+    plot(gaitData.times,rightAnkleSpeed,'Color','#0072BD');
+    plot(gaitData.times,leftAnkleSpeed,'Color','#D95319')
+    legend('Waist','Right Ankle','Left Ankle')
+    title(['Speed of Waist and Ankles. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
     xlabel('Times (sec)'); ylabel('Speed (m/s)');
 end
 
+%% Save Average Speed
+writematrix([mean(waistSpeed), mean(rightAnkleSpeed), mean(leftAnkleSpeed)],'Shimmer Vicon Results/shimmerViconVel.xlsx',...
+            'Sheet',['Sheet',num2str(subjNum)],'Range',['B',num2str(testNum+2)])
+        
+end
+
 %% Save Workspace and figure
-set(fig1, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
-saveas(fig1, ['Shimmer Vicon Results/waistSpeedSubject',num2str(subjNumber),'.pdf']);
-save(['Shimmer Workspaces/shimmerViconC3D',num2str(subjNumber),'.mat'])
-writematrix([mean(waistSpeed), mean(rightAnkleSpeed), mean(leftAnkleSpeed)], 'Shimmer Vicon Results/shimmerViconVel.xlsx', 'Range', ['E',num2str(subjNumber+2)])
+% set(fig1, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
+% saveas(fig1, ['Shimmer Vicon Results/waistSpeedSubject',num2str(subjNumber),'.pdf']);

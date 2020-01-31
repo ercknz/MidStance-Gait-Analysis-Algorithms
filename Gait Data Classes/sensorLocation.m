@@ -1,51 +1,53 @@
 classdef sensorLocation < handle
-   % sensorLocation is a subclass for the shimmerGaitData class. It stores
-   % the local sensor data, filtered data and can rotate the data collected.
+   % sensorLocation is a subclass for the shimmerGaitData class. It stores 
+   % the local sensor data, filtered data and can rotate the data collected. 
    %
    % class by erick nunez
-
+   
    % ----------------------------------------------------------------------
    % Properties
    % ----------------------------------------------------------------------
    properties
        sampleFreq
        period
-       % [x,y,z] for all data
+       % [x,y,z] for all data 
        preAcc
        preGyro
        preMag
        fPreAcc
        fPreGyro
        fPreMag
-
+       
        acc
        gyro
        mag
        fAcc
        fGyro
        fMag
-
+       
        preTimes     %secs
-       times    %secs
+       times        %secs
    end
-
+   
    properties (Access = private)
       data
       unixTimes
-
+      
       startIndex
       preEndIndex
-
+      
       accRange = 2:4;
       gyroRange = 5:7;
       magRange = 9:11;
-
+      
       filterOrder
       cutOffFreq
       filtA
       filtB
+      
+      dataSets = ['acc', 'gyro', 'mag'];
    end
-
+   
    % ----------------------------------------------------------------------
    % Methods
    % ----------------------------------------------------------------------
@@ -57,7 +59,7 @@ classdef sensorLocation < handle
            [~, endIndex] = min(abs(rawData(:,1)- endTime));
            for i = 1:col
                dataCol = rawData(~isnan(rawData(:,i)),i);
-               if ~isempty(dataCol)
+               if ~isempty(dataCol) 
                    obj.data(:,i) = dataCol(preIndex:endIndex);
                end
            end
@@ -75,11 +77,11 @@ classdef sensorLocation < handle
            obj.preTimes = (obj.unixTimes(1:obj.preEndIndex)-preEndTime)/1000;
            obj.times = (obj.unixTimes(obj.startIndex:end)-startTime)/1000;
        end
-
+       
        function out = getRaw(obj)
            out = obj.data;
        end
-
+       
        function obj = getAcc(obj,range)
            if nargin == 2
                obj.accRange = range;
@@ -89,7 +91,7 @@ classdef sensorLocation < handle
            obj.preAcc = obj.data(1:obj.preEndIndex, obj.accRange);
            obj.acc = obj.data(obj.startIndex:end, obj.accRange);
        end
-
+       
        function obj = getGyro(obj,range)
            if nargin == 2
                obj.gyroRange = range;
@@ -99,7 +101,7 @@ classdef sensorLocation < handle
            obj.preGyro = obj.data(1:obj.preEndIndex, obj.gyroRange);
            obj.gyro = obj.data(obj.startIndex:end, obj.gyroRange);
        end
-
+       
        function obj = getMag(obj,range)
            if nargin == 2
                obj.magRange = range;
@@ -109,34 +111,34 @@ classdef sensorLocation < handle
            obj.preMag = obj.data(1:obj.preEndIndex, obj.magRange);
            obj.mag = obj.data(obj.startIndex:end, obj.magRange);
        end
-
+       
        function obj = getSampFreq(obj)
            obj.period = mean(diff(obj.times));
            obj.sampleFreq = 1/obj.period;
        end
-
+       
        function obj = createFilter(obj, cutOffFreq, filterOrder)
            obj.filterOrder = filterOrder;
            obj.cutOffFreq = cutOffFreq;
            if ~isempty(obj.sampleFreq)
-               [obj.filtB, obj.filtA] = butter(obj.filterOrder, obj.cutOffFreq/(obj.sampleFreq/2));
+               [obj.filtB, obj.filtA] = butter(obj.filterOrder, obj.cutOffFreq/(obj.sampleFreq/2));  
            else
-              error('find sampling freq first')
+              error('find sampling freq first') 
            end
        end
-
-       function obj = filterData(obj)
-           if ~isempty(obj.filtA) && ~isempty(obj.filtB)
+       
+       function obj = filterData(obj, dataToFilter)
+           if ~isempty([obj.filtA, obj.filtB])
                for i = 1:3
-                   if ~isempty(obj.acc)
+                   if ~isempty(obj.acc) && (strcmp('acc',dataToFilter) || strcmp('all',dataToFilter))
                        obj.fPreAcc(:,i) = filtfilt(obj.filtB, obj.filtA, obj.preAcc(:,i));
                        obj.fAcc(:,i) = filtfilt(obj.filtB, obj.filtA, obj.acc(:,i));
                    end
-                   if ~isempty(obj.gyro)
+                   if ~isempty(obj.gyro) && (strcmp('gyro',dataToFilter) || strcmp('all',dataToFilter))
                        obj.fPreGyro(:,i) = filtfilt(obj.filtB, obj.filtA, obj.preGyro(:,i));
                        obj.fGyro(:,i) = filtfilt(obj.filtB, obj.filtA, obj.gyro(:,i));
                    end
-                   if ~isempty(obj.mag)
+                   if ~isempty(obj.mag) && (strcmp('mag',dataToFilter) || strcmp('all',dataToFilter))
                        obj.fPreMag(:,i) = filtfilt(obj.filtB, obj.filtA, obj.preMag(:,i));
                        obj.fMag(:,i) = filtfilt(obj.filtB, obj.filtA, obj.mag(:,i));
                    end
@@ -145,7 +147,7 @@ classdef sensorLocation < handle
                error('create filter first')
            end
        end
-
+       
        function obj = rotateIMU(obj, axis, degrees)
            if ~isempty(obj.acc)
                obj.preAcc = rotate(obj.preAcc, axis, degrees);

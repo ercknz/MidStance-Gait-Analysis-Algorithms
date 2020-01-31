@@ -27,6 +27,8 @@ classdef shimmerGaitData < handle
        preEndUnixTime
        startUnixTime
        endUnixTime
+       
+       locations = ['rightAnkle', 'leftAnkle', 'waist', 'rightWrist', 'leftWrist'];
    end
    
    % ----------------------------------------------------------------------
@@ -34,18 +36,20 @@ classdef shimmerGaitData < handle
    % ----------------------------------------------------------------------
    
    methods
-       function obj = shimmerGaitData(subjNum, logFilePath, syncJumpUsed)
-           logFile = readmatrix(logFilePath);
+       function obj = shimmerGaitData(testNumber, logFilePath, syncJumpUsed)
+           subjNum = floor(testNumber/100);
+           testNum = testNumber-subjNum*100;
+           logFile = readmatrix(logFilePath,'Sheet',['Sheet',num2str(subjNum)]);
            obj.subjectNumber = subjNum;
-           obj.preUnixTime = logFile(subjNum,2);
+           obj.preUnixTime = logFile(testNum,2);
            if syncJumpUsed
                obj.syncJumpUsed = syncJumpUsed;
-               obj.preEndUnixTime = logFile(subjNum,3);
-               obj.startUnixTime = logFile(subjNum,4);
-               obj.endUnixTime = logFile(subjNum,5);
+               obj.preEndUnixTime = logFile(testNum,3);
+               obj.startUnixTime = logFile(testNum,4);
+               obj.endUnixTime = logFile(testNum,5);
            else
-               obj.startUnixTime = logFile(subjNum,3);
-               obj.endUnixTime = logFile(subjNum,4);
+               obj.startUnixTime = logFile(testNum,3);
+               obj.endUnixTime = logFile(testNum,4);
            end
        end
        
@@ -222,39 +226,39 @@ classdef shimmerGaitData < handle
        end
        
        function obj = createFilter(obj,cutOffFreq, filterOrder)
-          if ~isempty(obj.rightAnkle)
-              obj.rightAnkle.createFilter(cutOffFreq, filterOrder);
-          end 
-          if ~isempty(obj.leftAnkle)
-              obj.leftAnkle.createFilter(cutOffFreq, filterOrder);
-          end 
-          if ~isempty(obj.rightWrist)
-              obj.rightWrist.createFilter(cutOffFreq, filterOrder);
-          end 
-          if ~isempty(obj.leftWrist)
-              obj.leftWrist.createFilter(cutOffFreq, filterOrder);
-          end 
-          if ~isempty(obj.waist)
-              obj.waist.createFilter(cutOffFreq, filterOrder);
-          end 
+           if ~isempty(obj.rightAnkle)
+               obj.rightAnkle.createFilter(cutOffFreq, filterOrder);
+           end
+           if ~isempty(obj.leftAnkle)
+               obj.leftAnkle.createFilter(cutOffFreq, filterOrder);
+           end
+           if ~isempty(obj.rightWrist)
+               obj.rightWrist.createFilter(cutOffFreq, filterOrder);
+           end
+           if ~isempty(obj.leftWrist)
+               obj.leftWrist.createFilter(cutOffFreq, filterOrder);
+           end
+           if ~isempty(obj.waist)
+               obj.waist.createFilter(cutOffFreq, filterOrder);
+           end
        end
        
-       function obj = filterData(obj)
-          if ~isempty(obj.rightAnkle)
-              obj.rightAnkle.filterData();
-          end
-          if ~isempty(obj.leftAnkle)
-              obj.leftAnkle.filterData();
-          end 
-          if ~isempty(obj.rightWrist)
-              obj.rightWrist.filterData();
-          end 
-          if ~isempty(obj.leftWrist)
-              obj.leftWrist.filterData();
-          end 
-          if ~isempty(obj.waist)
-              obj.waist.filterData();
-          end 
+       function obj = filterData(obj, dataToFilter)
+           if ~isempty(obj.rightAnkle)
+               obj.rightAnkle.filterData(dataToFilter);
+           end
+           if ~isempty(obj.leftAnkle)
+               obj.leftAnkle.filterData(dataToFilter);
+           end
+           if ~isempty(obj.rightWrist)
+               obj.rightWrist.filterData(dataToFilter);
+           end
+           if ~isempty(obj.leftWrist)
+               obj.leftWrist.filterData(dataToFilter);
+           end
+           if ~isempty(obj.waist)
+               obj.waist.filterData(dataToFilter);
+           end
        end
-   end 
+   end
 end

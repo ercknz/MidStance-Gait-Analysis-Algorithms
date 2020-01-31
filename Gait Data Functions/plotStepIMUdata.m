@@ -1,4 +1,4 @@
-function plotStepIMUdata(subjNum, location, steps, HSorMS, accXYZ, gyroXYZ, anglesXYZ, times, meanAccXYZ, meanGyroXYZ, meanAngleXYZ, stdAccXYZ, stdGyroXYZ, stdAngleXYZ, meanDur)
+function plotStepIMUdata(testNumber, location, steps, HSorMS, accXYZ, gyroXYZ, anglesXYZ, times, meanAccXYZ, meanGyroXYZ, meanAngleXYZ, stdAccXYZ, stdGyroXYZ, stdAngleXYZ, meanDur)
 %% Plot IMU Mean Step Data
 % This function takes in resampled IMU data thats has been segmented, 
 % either Heel Strike to Heel Strike or Mid Stance to Mid Stance and plots 
@@ -11,7 +11,7 @@ function plotStepIMUdata(subjNum, location, steps, HSorMS, accXYZ, gyroXYZ, angl
 % 
 % Function by Erick Nunez
 
-%% Heel Strike or Mid Stance
+%% Variables
 switch HSorMS
     case 'HS'
         stancePts = steps.HSindexes;
@@ -22,79 +22,100 @@ switch HSorMS
     otherwise
         error('Invalid step segmentation');
 end
+subjNum = floor(testNumber/100);
+testNum = testNumber-subjNum*100;
 
 %% Plot the Data
-offset = randi(1000);
 % Figure 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fig1 = figure(20 + subjNum + offset);
+fig1 = figure(20 + subjNum + randi(100));
 set(fig1, 'Units', 'Normalized', 'OuterPosition', [0,0, 1, 1]);
-subplot(3,1,1)
+subplot(4,1,1)
 plot(times, gyroXYZ(:,2)); grid on; hold on;
 plot(times(stancePts), gyroXYZ(stancePts,2), 'rs') 
-xlabel('seconds'); ylabel('deg/sec');
-title([location,' Gyro w/ ', stance,' for Subject ',num2str(subjNum)])
+xlabel('seconds'); ylabel('deg/sec'); xlim([20,40]);
+title([location,' Angular Vel w/ ', stance,'. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,1,2)
+subplot(4,1,2)
 plot(times, accXYZ(:,3)); grid on; hold on;
 plot(times(stancePts), accXYZ(stancePts,3), 'rs') 
-xlabel('seconds'); ylabel('m/s^2');
-title([location,' Global Vertical Acceleration w/ ', stance,' for Subject ',num2str(subjNum)])
+xlabel('seconds'); ylabel('m/s^2'); xlim([20,40]);
+title([location,' Global Vertical Acc w/ ', stance,'. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,1,3)
+subplot(4,1,3)
+plot(times, accXYZ(:,1)); grid on; hold on;
+plot(times(stancePts), accXYZ(stancePts,1), 'rs') 
+xlabel('seconds'); ylabel('m/s^2'); xlim([20,40]);
+title([location,' Global Horizontal Acc w/ ', stance,'. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
+
+subplot(4,1,4)
 plot(times, anglesXYZ(:,2)); grid on; hold on;
 plot(times(stancePts), anglesXYZ(stancePts,2), 'rs') 
-xlabel('seconds'); ylabel('degrees');
-title([location,' IMU Angle w/ ', stance,' for Subject ',num2str(subjNum)])
+xlabel('seconds'); ylabel('degrees'); xlim([20,40]);
+title([location,' Angle w/ ', stance,'. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
 % Figure 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fig2 = figure(40 + subjNum + offset);
+fig2 = figure(40 + subjNum + randi(100));
 set(fig2, 'Units', 'Normalized', 'OuterPosition', [0,0, 1, 1]);
-subplot(3,2,1)
+subplot(4,2,1)
 hold on; grid on;
 for i = 1:length(steps.indexes)
     plot(gyroXYZ(steps.indexes{i},2))
 end
 xlabel('frames'); ylabel('deg/sec');
-title([location,' Gyroscope Data of Steps for Subject ',num2str(subjNum)])
+title([location,' Angular Vel of Steps. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,2,3)
+subplot(4,2,3)
 hold on; grid on;
 for i = 1:length(steps.indexes)
     plot(accXYZ(steps.indexes{i},3))
 end
 xlabel('frames'); ylabel('m/s^2');
-title([location,' Global Vertical Acceleration of Steps for Subject',num2str(subjNum)])
+title([location,' Global Vertical Acc of Steps. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,2,5)
+subplot(4,2,5)
+hold on; grid on;
+for i = 1:length(steps.indexes)
+    plot(accXYZ(steps.indexes{i},1))
+end
+xlabel('frames'); ylabel('m/s^2');
+title([location,' Global Horizontal Acc of Steps. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
+
+subplot(4,2,7)
 hold on; grid on;
 for i = 1:length(steps.indexes)
     plot(anglesXYZ(steps.indexes{i},2))
 end
 xlabel('frames'); ylabel('degrees');
-title([location,' IMU Angle of Steps for Subject ', num2str(subjNum)])
+title([location,' Angle of Steps. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,2,2)
+subplot(4,2,2)
 errorbar(meanDur, meanGyroXYZ(:,2), stdGyroXYZ(:,2))
 grid on;
 xlabel('Sec'); ylabel('deg/sec');
-title([location,' Mean Gyroscope Step Profile for Subject ',num2str(subjNum)])
+title([location,' Angular Vel Step Profile. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,2,4)
+subplot(4,2,4)
 errorbar(meanDur, meanAccXYZ(:,3), stdAccXYZ(:,3))
 grid on;
 xlabel('Sec'); ylabel('m/s^2');
-title([location,' Mean Global Vertical Accelerometer Step Profile for Subject ',num2str(subjNum)])
+title([location,' Global Vertical Acc Step Profile. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
-subplot(3,2,6)
-errorbar(meanDur, meanAngleXYZ(:,2), stdAngleXYZ(:,2))
+subplot(4,2,6)
+errorbar(meanDur, meanAccXYZ(:,1), stdAccXYZ(:,1))
 grid on;
 xlabel('Sec'); ylabel('m/s^2');
-title([location,' Mean IMU Angle Step Profile for Subject ',num2str(subjNum)])
+title([location,' Global Horizontal Acc Step Profile. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
+
+subplot(4,2,8)
+errorbar(meanDur, meanAngleXYZ(:,2), stdAngleXYZ(:,2))
+grid on;
+xlabel('Sec'); ylabel('degrees');
+title([location,' Angle Step Profile. Subject:',num2str(subjNum),' Trial:',num2str(testNum)])
 
 %% Saves figures 
-set(fig1, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
-saveas(fig1, ['Shimmer Vicon Results/subj',num2str(subjNum),stance,location,'.pdf']);
-set(fig2, 'PaperOrientation', 'landscape', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1])
-saveas(fig2, ['Shimmer Vicon Results/subj',num2str(subjNum),'StepProfiles',location,stc,'.pdf']);
+set(fig1, 'PaperOrientation', 'portrait', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1]);
+saveas(fig1, ['Shimmer Vicon Results/subj',num2str(subjNum),'Trial',num2str(testNum),stance,location,'.pdf']);
+set(fig2, 'PaperOrientation', 'portrait', 'PaperUnits', 'normalized', 'PaperPosition',[0,0,1,1]);
+saveas(fig2, ['Shimmer Vicon Results/subj',num2str(subjNum),'Trial',num2str(testNum),'Steps',location,stc,'.pdf']);
 
 end

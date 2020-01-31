@@ -1,8 +1,9 @@
-function steps = findMSIndexes(anglesXYZ, times, sigma)
+function steps = findMSIndexes(gryoXYZ, anglesXYZ, times, sigma)
 %% Finds MS Indexes
 % This function is used to find the Mid Stance point for each step based on 
-% the angles. The function assumes the following orientation of
-% the data:
+% the gyroscope data. It find the local maxs first which are the HS and TO
+% indexes. Then it find the midpoint between them which ends up being
+% midstance.
 % +x: direction of walking
 % +y: medial to Left Side
 % +z: normal to ground (vertical)
@@ -10,18 +11,21 @@ function steps = findMSIndexes(anglesXYZ, times, sigma)
 % Function by Erick Nunez
 
 %% Variables to be used
-indexes = {};       removed = 0;
+indexes = {};
 
-%% Finds Mins
-MSindex = find(islocalmin(abs(anglesXYZ(:,2)), 'MinSeparation', 0.2, 'SamplePoints',times));
+%% Finds Maxs (HS to TO)
+HSTOindex = find(islocalmax(gryoXYZ(:,2), 'MinSeparation', 0.4, 'SamplePoints',times));
 
-%% Find rate of change of angles to find slope
-angRateY = gradient(anglesXYZ(:,2), mean(diff(times)));
-for i = 1:(length(MSindex) - removed)
-    if angRateY(MSindex(i - removed)) < 0
-       MSindex(i- removed) = [];
-       removed = removed + 1;
-    end
+%% Find MS between HS and TO
+if anglesXYZ(HSTOindex(1),2) > anglesXYZ(HSTOindex(2),2)
+    HSTOindex(1) = [];
+end
+if anglesXYZ(HSTOindex(end),2) < anglesXYZ(HSTOindex(end-1),2)
+    HSTOindex(end) = [];
+end
+MSindex = [];
+for i = 1:length(HSTOindex)/2
+    MSindex = [MSindex round((HSTOindex(i*2)+HSTOindex(i*2-1))/2)]; 
 end
 
 %% separates steps
@@ -48,4 +52,14 @@ end
 steps.removed = removed;            steps.indexes = indexes;
 steps.meanFrames = meanFrames;      steps.stdFrames = stdFrames;
 steps.MSindexes = MSindex;
+
+end
+
+%% Additional Functions
+% function dataOut = calculateInt(rate, dt)
+% dataOut = zeros(size(rate));
+% for i = 2:length(dataOut)
+%     dataOut(i,:) = dataOut(i-1,:) + (rate(i,:) + rate(i-1,:)).*dt/2;
+% end
+% end
 
