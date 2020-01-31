@@ -1,6 +1,6 @@
-## MidStance Gait Analysis Algorithms
+# MidStance Gait Analysis Algorithms
 
-# Description
+## Description
 This code takes in the data collected from subjects during medical evaluations. 
 Subjects wore IMU's on the waist, wrists and ankles.
 Subjects were asked to perfrom different motor taskes inclduing 2 min walking. 
