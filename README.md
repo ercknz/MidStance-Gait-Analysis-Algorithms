@@ -18,5 +18,8 @@ All code was tested in Matlab 2019a on Windows 7.
 
 No subject data or results were pushed to github. 
 
+## Publication
+[EMBC 2020 - Comparing different methods of gait speed estimation](https://ieeexplore.ieee.org/document/9175341)
+
 Scripts and functions by Erick Nunez.  
 Supervised by Jean-francois Daneault, PhD
